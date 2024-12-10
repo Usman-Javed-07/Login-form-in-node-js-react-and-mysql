@@ -5,7 +5,7 @@ const userRoutes = require("./routes/userRoutes.js");
 const db = require("./config/db");
 
 const app = express();
-const PORT = 5000;
+// const PORT = 5000;
 
 // Middleware
 app.use(bodyParser.json());
@@ -20,7 +20,9 @@ db.connect((err) => {
 // Routes
 app.use("/api/users", userRoutes);
 
-// Start server
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  const env = process.env.NODE_ENV || "development"; 
+  console.log(`Server running in ${env} mode on http://localhost:${PORT}`);
 });

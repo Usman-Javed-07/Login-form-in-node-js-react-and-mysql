@@ -48,7 +48,7 @@ input {
   border-radius: 6px;
   outline: none;
   transition: all 0.3s ease;
-
+  /* border-color: initial; */
 }
 
 input:focus {

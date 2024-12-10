@@ -1,9 +1,7 @@
-
-
 import { useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
- 
+
 export const Signup = () => {
     const [formData, setFormData] = useState({
         username: "",
@@ -11,30 +9,57 @@ export const Signup = () => {
         password: "",
         confirmPassword: "",
     });
-    const [error, setError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
+    // Regular expression for basic email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+
+        if (name === "email") {
+            if (!emailRegex.test(value)) {
+                setEmailError("Invalid email address.");
+            } else {
+                setEmailError(""); 
+            }
+        }
+
+
+        if (name === "password" || name === "confirmPassword") {
+            setPasswordError("");
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
-            setError("Passwords do not match!");
+
+        if (!emailRegex.test(formData.email)) {
+            setEmailError("Please enter a valid email address.");
             return;
         }
+
+        if (formData.password !== formData.confirmPassword) {
+            setPasswordError("Password do not match!");
+            return;
+        }
+
         try {
-            setError(""); // Clear previous errors
+            setEmailError("");
+            setPasswordError(""); 
             await axios.post("http://localhost:5000/api/users/signup", formData);
             alert("Signup successful!");
         } catch (err) {
-            setError(err.response?.data?.message || "Error signing up");
+            setPasswordError(err.response?.data?.message || "Error signing up");
         }
     };
 
     return (
         <div className="main-section">
-            <h1>SignUp</h1>
+            <h1>Sign Up</h1>
             <form className="form" onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -53,6 +78,7 @@ export const Signup = () => {
                     value={formData.email}
                     onChange={handleChange}
                 />
+                {emailError && <p style={{ color: "red" }}>{emailError}</p>}
                 <input
                     type="password"
                     name="password"
@@ -61,6 +87,9 @@ export const Signup = () => {
                     placeholder="New Password"
                     value={formData.password}
                     onChange={handleChange}
+                    style={{
+                        borderColor: passwordError ? "red" : "",
+                    }}
                 />
                 <input
                     type="password"
@@ -70,16 +99,19 @@ export const Signup = () => {
                     placeholder="Confirm Password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
+                    style={{
+                        borderColor: passwordError ? "red" : "",
+                    }}
                 />
-                <button type="submit">SignUp</button>
-                {error && <p className="error">{error}</p>}
+                {passwordError && <p style={{ color: "red", marginTop: "-10px" }}>{passwordError}</p>}
+                <button type="submit">Sign Up</button>
                 <div className="have-an-account">
                     <p>Already have an account?</p>
-                    <NavLink to ="/">Login</NavLink>
+                    <NavLink to="/">Login</NavLink>
                 </div>
             </form>
         </div>
     );
 };
 
-export default Signup;  
+export default Signup;
