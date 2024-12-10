@@ -29,7 +29,7 @@ const login = (req, res) => {
 
     const user = results[0];
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: "Invalid password" });
+    if (!match) return res.status(401).json({ message: "Invalid password"});
 
     const token = jwt.sign({ id: user.id }, "secretkey", { expiresIn: "1h" });
     res.json({ message: "Login successful", username: user.username, token });
