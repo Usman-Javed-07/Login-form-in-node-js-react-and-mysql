@@ -1,10 +1,14 @@
-
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
 const User = sequelize.define(
   "User",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true, 
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -24,6 +28,16 @@ const User = sequelize.define(
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at", 
+  
+    defaultScope: {
+      attributes: { exclude: ["id"] }, 
+    },
+    getterMethods: {
+    
+      getId: function () {
+        return undefined; 
+      },
+    },
   }
 );
 
