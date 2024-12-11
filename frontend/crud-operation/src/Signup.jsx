@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export const Signup = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +12,8 @@ export const Signup = () => {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
+    const navigate = useNavigate();
+
     // Regular expression for basic email validation
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -19,44 +21,49 @@ export const Signup = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
 
-
         if (name === "email") {
             if (!emailRegex.test(value)) {
                 setEmailError("Invalid email address.");
             } else {
-                setEmailError(""); 
+                setEmailError("");
             }
         }
-
 
         if (name === "password" || name === "confirmPassword") {
             setPasswordError("");
         }
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+    
         if (!emailRegex.test(formData.email)) {
             setEmailError("Please enter a valid email address.");
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
-            setPasswordError("Password do not match!");
+            setPasswordError("Passwords do not match!");
             return;
         }
 
         try {
+          
             setEmailError("");
-            setPasswordError(""); 
+            setPasswordError("");
+
+        
             await axios.post("http://localhost:5000/api/users/signup", formData);
+
             alert("Signup successful!");
+            navigate("/");
         } catch (err) {
-            setPasswordError(err.response?.data?.message || "Error signing up");
+            const errorMessage = err.response?.data?.message || "Error signing up";
+            setPasswordError(errorMessage);
         }
     };
-
     return (
         <div className="main-section">
             <h1>Sign Up</h1>
