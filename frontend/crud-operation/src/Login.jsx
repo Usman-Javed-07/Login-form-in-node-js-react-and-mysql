@@ -21,7 +21,6 @@ export const Login = () => {
             setError(err.response?.data?.message || "Error logging in");
         }
     };
-
     return (
         <div className="main-section" >
             <h1>Login</h1>

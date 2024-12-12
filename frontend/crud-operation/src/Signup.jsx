@@ -53,11 +53,18 @@ export const Signup = () => {
           
             setEmailError("");
             setPasswordError("");
+            const response = await axios.post("http://localhost:5000/api/users/signup", formData);
 
+            const { token, message } = response.data;
+    
+            // Store the token in localStorage
+            localStorage.setItem("token", token);
+    
+            alert(message || "Signup successful!");
         
-            await axios.post("http://localhost:5000/api/users/signup", formData);
-
-            alert("Signup successful!");
+            // await axios.post("http://localhost:5000/api/users/signup", formData);
+          
+            // alert("Signup successful!");
             navigate("/");
         } catch (err) {
             const errorMessage = err.response?.data?.message || "Error signing up";

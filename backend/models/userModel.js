@@ -7,7 +7,7 @@ const User = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true, 
+      autoIncrement: true,
     },
     username: {
       type: DataTypes.STRING,
@@ -23,19 +23,21 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    // tokens: {
+    //   type: DataTypes.ARRAY(DataTypes.STRING),
+    //   allowNull: true },
   },
   {
     timestamps: true,
     createdAt: "created_at",
-    updatedAt: "updated_at", 
-  
+    updatedAt: "updated_at",
+
     defaultScope: {
-      attributes: { exclude: ["id"] }, 
+      attributes: { exclude: ["id"] },
     },
     getterMethods: {
-    
       getId: function () {
-        return undefined; 
+        return undefined;
       },
     },
   }
